@@ -7,7 +7,7 @@ using PlayerManagerMVC;
 
 
 
-namespace PlayerManagerMV
+namespace PlayerManagerMVC
 {
 
     public class Controller

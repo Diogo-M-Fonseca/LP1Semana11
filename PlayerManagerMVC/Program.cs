@@ -4,7 +4,7 @@ using System.ComponentModel.Design;
 
 
 
-namespace PlayerManagerMV
+namespace PlayerManagerMVC
 {
     /// <summary>
     /// The player listing program.

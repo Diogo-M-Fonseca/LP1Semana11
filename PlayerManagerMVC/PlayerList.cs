@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace PlayerManagerMV
+namespace PlayerManagerMVC
 {
     public class PlayersList : List<Player>
     {
