@@ -1,12 +1,26 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using PlayerManagerMVC;
 
-namespace PlayerManagerMVC
+namespace PlayerManagerMV
 {
     public interface IView
     {
+
+        void ShowGoodbyeMessage();
+
+        void ShowInvalidOptionMessage();
+
+        void WaitForUser();
+
         string MainMenu();
+
+        Player AskForPlayerInfo();
+
+        void ShowPlayers(IEnumerable<Player> playersToList);
+
+        int AskForMinScore();
+
+        PlayerOrder AskForPlayerOrder();
+
     }
 }
