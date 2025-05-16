@@ -1,20 +1,16 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using PlayerManagerMVC2;
-
-
 
 namespace PlayerManagerMVC2
 {
-
+    /// <summary>
+    /// The player listing program.
+    /// </summary>
     public class Controller
     {
         /// The list of all players
-        private readonly PlayersList playerList;
+        private readonly List<Player> playerList;
 
         // Comparer for comparing player by name (alphabetical order)
         private readonly IComparer<Player> compareByName;
@@ -22,60 +18,43 @@ namespace PlayerManagerMVC2
         // Comparer for comparing player by name (reverse alphabetical order)
         private readonly IComparer<Player> compareByNameReverse;
 
-
         private IView view;
 
 
+        /// <summary>
+        /// Program begins here.
+        /// </summary>
+        /// <param name="args">Not used.</param>
 
-        public Controller(string filePath)
+
+        /// <summary>
+        /// Creates a new instance of the player listing program.
+        /// </summary>
+        public Controller(IView view, string path)
         {
-            view = new UglyView();
+            // Initialize player comparers
             compareByName = new CompareByName(true);
             compareByNameReverse = new CompareByName(false);
+            this.view = view;
+
+            string[] nameList = File.ReadAllLines(path);
 
             playerList = new List<Player>();
 
-            try
+            foreach (string player in nameList)
             {
-                LoadPlayersFromFile(filePath);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Erro ao ler o ficheiro: {ex.Message}");
-                Environment.Exit(1);
+                string[] playerDivided = player.Split(",");
+
+                playerList.Add
+                (new Player(playerDivided[0].Trim(), Convert.ToInt32(playerDivided[1].Trim())));
             }
         }
-        }
-
-         private void LoadPlayersFromFile(string filePath)
-        {
-            if (!File.Exists(filePath))
-                throw new FileNotFoundException("Ficheiro não encontrado.", filePath);
-
-            var lines = File.ReadAllLines(filePath);
-            foreach (var line in lines)
-            {
-                var parts = line.Split(',');
-                if (parts.Length != 2)
-                    continue;
-
-                string name = parts[0].Trim();
-                if (!int.TryParse(parts[1], out int score))
-                    continue;
-
-                playerList.Add(new Player(name, score));
-            }
-        }
-
-
-        
 
         /// <summary>
         /// Start the player listing program instance
         /// </summary>
-        public void Run(IView view)
+        public void Start()
         {
-            this.view = view;
             // We keep the user's option here
             string option;
 
@@ -83,17 +62,18 @@ namespace PlayerManagerMVC2
             do
             {
                 // Show menu and get user option
-                option = view.MainMenu();
+                option = view.DisplayMenu();
+
 
                 // Determine the option specified by the user and act on it
                 switch (option)
                 {
                     case "1":
                         // Insert player
-                        InsertPlayer();
+                        view.AddNewPlayer(playerList);
                         break;
                     case "2":
-                        view.ShowPlayers(playerList);
+                        view.ListOfAllPlayers(playerList);
                         break;
                     case "3":
                         ListPlayersWithScoreGreaterThan();
@@ -102,54 +82,33 @@ namespace PlayerManagerMVC2
                         SortPlayerList();
                         break;
                     case "0":
-                        view.ShowGoodbyeMessage();
+                        view.LastProgramMessage();
                         break;
                     default:
-                        view.ShowInvalidOptionMessage();
+                        view.ErrorMessage();
                         break;
                 }
-
-                // Wait for user to press a key...
-                view.WaitForUser();
+                view.WaitForInput();
 
                 // Loop keeps going until players choses to quit (option 4)
             } while (option != "0");
         }
 
-        /// <summary>
-        /// Shows the main menu.
-        /// </summary>
-    
-
-        /// <summary>
-        /// Inserts a new player in the player list.
-        /// </summary>
-        private void InsertPlayer()
-        {
-            Player newPlayer = view.AskForPlayerInfo();
-            playerList.Add(newPlayer);
-        }
-
-    
 
         /// <summary>
         /// Show all players with a score higher than a user-specified value.
         /// </summary>
         private void ListPlayersWithScoreGreaterThan()
         {
-            
             // Enumerable of players with score higher than the minimum score
             IEnumerable<Player> playersWithScoreGreaterThan;
 
-            // Minimum score user should have in order to be shown
-            int minScore = view.AskForMinScore();
-
             // Get players with score higher than the user-specified value
             playersWithScoreGreaterThan =
-                playerList.GetPlayersWithScoreGreaterThan(minScore);
+                GetPlayersWithScoreGreaterThan(view.AskUserForAMinScore());
 
             // List all players with score higher than the user-specified value
-            view.ShowPlayers(playersWithScoreGreaterThan);
+            view.ListOfAllPlayers(playersWithScoreGreaterThan);
         }
 
         /// <summary>
@@ -159,15 +118,28 @@ namespace PlayerManagerMVC2
         /// <returns>
         /// An enumerable of players with a score higher than the given value.
         /// </returns>
-       
+        private IEnumerable<Player> GetPlayersWithScoreGreaterThan(int minScore)
+        {
+            // Cycle all players in the original player list
+            foreach (Player p in playerList)
+            {
+                // If the current player has a score higher than the
+                // given value....
+                if (p.Score > minScore)
+                {
+                    // ...return him as a member of the player enumerable
+                    yield return p;
+                }
+            }
+        }
+
         /// <summary>
         ///  Sort player list by the order specified by the user.
         /// </summary>
         private void SortPlayerList()
         {
-            PlayerOrder playerOrder = view.AskForPlayerOrder();
 
-            switch (playerOrder)
+            switch (view.UserInputForOrder())
             {
                 case PlayerOrder.ByScore:
                     playerList.Sort();
@@ -179,7 +151,7 @@ namespace PlayerManagerMVC2
                     playerList.Sort(compareByNameReverse);
                     break;
                 default:
-                    view.ShowInvalidOptionMessage();
+                    Console.Error.WriteLine("\n>>> Unknown player order! <<<\n");
                     break;
             }
         }

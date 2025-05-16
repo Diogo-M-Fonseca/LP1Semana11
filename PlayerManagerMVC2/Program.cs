@@ -1,38 +1,28 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-
-
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PlayerManagerMVC2
 {
-    /// <summary>
-    /// The player listing program.
-    /// </summary>
     public class Program
     {
-        /// <summary>
-        /// Program begins here.
-        /// </summary>
-        /// <param name="args">Not used.</param>
         private static void Main(string[] args)
         {
-            //Inicialize player comparers
-            // Initialize player comparers
-            IComparer<Player> compareByName = new CompareByName(true);
-            IComparer<Player> compareByNameReverse = new CompareByName(false);
-            if (args.Length == 0)
+            if (args.Length <= 0)
             {
-                Console.Error.WriteLine("Erro: Nome do ficheiro com jogadores não fornecido.");
-                Console.Error.WriteLine("Uso: PlayerManagerMVC <ficheiro>");
+                Console.WriteLine("Please specify a file");
                 return;
             }
+            else
+            {
+                IView view = new View();
 
-            string filePath = args[0];
+                Controller contr = new Controller(view, args[0]);
 
-            var controller = new Controller(filePath);
-            controller.Run();
-
+                contr.Start();
+            }
         }
     }
 }

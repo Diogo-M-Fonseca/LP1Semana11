@@ -1,26 +1,20 @@
+using System;
 using System.Collections.Generic;
-using PlayerManagerMVC2;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PlayerManagerMVC2
 {
     public interface IView
     {
-
-        void ShowGoodbyeMessage();
-
-        void ShowInvalidOptionMessage();
-
-        void WaitForUser();
-
-        string MainMenu();
-
-        Player AskForPlayerInfo();
-
-        void ShowPlayers(IEnumerable<Player> playersToList);
-
-        int AskForMinScore();
-
-        PlayerOrder AskForPlayerOrder();
+        string DisplayMenu();
+        void AddNewPlayer(List<Player> playerList);
+        void LastProgramMessage();
+        void ListOfAllPlayers(IEnumerable<Player> ListOfPlayers);
+        int AskUserForAMinScore();
+        void ErrorMessage();
+        void WaitForInput();
+        PlayerOrder UserInputForOrder();
 
     }
 }

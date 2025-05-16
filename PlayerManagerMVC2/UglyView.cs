@@ -1,29 +1,20 @@
 using System;
 using System.Collections.Generic;
-using PlayerManagerMVC2;
-
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PlayerManagerMVC2
 {
-
-    public class UglyView : IView
+    public class View : IView
     {
-
-        public int AskForMinScore()
+        public void AddNewPlayer(List<Player> playerList)
         {
-            // Ask the user what is the minimum score
-            Console.Write("\nMinimum score player should have? ");
-            return Convert.ToInt32(Console.ReadLine());
-        }
-
-        public Player AskForPlayerInfo()
-        {
-
             // Variables
             string name;
             int score;
+            Player newPlayer;
 
-            //Ask for player info
+            // Ask for player info
             Console.WriteLine("\nInsert player");
             Console.WriteLine("-------------\n");
             Console.Write("Name: ");
@@ -32,11 +23,54 @@ namespace PlayerManagerMVC2
             score = Convert.ToInt32(Console.ReadLine());
 
             // Create new player and add it to list
-            return new Player(name, score);
+            newPlayer = new Player(name, score);
+            playerList.Add(newPlayer);
         }
 
+        public int AskUserForAMinScore()
+        {
+            Console.Write("\nMinimum score player should have? ");
+            return Convert.ToInt32(Console.ReadLine());
+        }
 
-        public PlayerOrder AskForPlayerOrder()
+        public string DisplayMenu()
+        {
+            Console.WriteLine("Menu");
+            Console.WriteLine("----\n");
+            Console.WriteLine("1. Insert player");
+            Console.WriteLine("2. List all players");
+            Console.WriteLine("3. List players with score greater than");
+            Console.WriteLine("4. Sort players");
+            Console.WriteLine("0. Quit\n");
+            Console.Write("Your choice > ");
+            return Console.ReadLine();
+        }
+
+        public void ErrorMessage()
+        {
+            Console.Error.WriteLine("\n>>> Unknown option! <<<\n");
+
+        }
+
+        public void LastProgramMessage()
+        {
+            Console.WriteLine("Bye!");
+        }
+
+        public void ListOfAllPlayers(IEnumerable<Player> ListOfPlayers)
+        {
+            Console.WriteLine("\nList of players");
+            Console.WriteLine("-------------\n");
+
+            // Show each player in the enumerable object
+            foreach (Player p in ListOfPlayers)
+            {
+                Console.WriteLine($" -> {p.Name} with a score of {p.Score}");
+            }
+            Console.WriteLine();
+        }
+
+        public PlayerOrder UserInputForOrder()
         {
             Console.WriteLine("Player order");
             Console.WriteLine("------------");
@@ -52,43 +86,7 @@ namespace PlayerManagerMVC2
             return Enum.Parse<PlayerOrder>(Console.ReadLine());
         }
 
-        public string MainMenu()
-        {
-            Console.WriteLine("Menu");
-            Console.WriteLine("----\n");
-            Console.WriteLine("1. Insert player");
-            Console.WriteLine("2. List all players");
-            Console.WriteLine("3. List players with score greater than");
-            Console.WriteLine("4. Sort players");
-            Console.WriteLine("0. Quit\n");
-            Console.Write("Your choice > ");
-            return Console.ReadLine();
-        }
-        public void ShowGoodbyeMessage()
-        {
-            Console.WriteLine("Bye");
-        }
-
-        public void ShowInvalidOptionMessage()
-        {
-            Console.Error.WriteLine("\n>>> Unknown option! <<<\n");
-        }
-
-
-        public void ShowPlayers(IEnumerable<Player> playersToList)
-        {
-            Console.WriteLine("\nList of players");
-            Console.WriteLine("-------------\n");
-
-            // Show each player in the enumerable object
-            foreach (Player p in playersToList)
-            {
-                Console.WriteLine($" -> {p.Name} with a score of {p.Score}");
-            }
-            Console.WriteLine();
-        }
-
-        public void WaitForUser()
+        public void WaitForInput()
         {
             Console.Write("\nPress any key to continue...");
             Console.ReadKey(true);
