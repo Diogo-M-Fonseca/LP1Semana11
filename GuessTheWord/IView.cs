@@ -7,6 +7,9 @@ namespace GuessTheWord
 {
     public interface IView
     {
-        
+        string SelectRandomWord(IDictionary<string, string> wordsWithHints);
+        void RevealedLetterPos(string chosenWord, string hint);
+        void GuessTheWord(string chosenWord, string guess);
+
     }
 }
