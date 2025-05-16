@@ -1,0 +1,50 @@
+apple,fruit
+banana,fruit
+tiger,animal
+elephant,animal
+giraffe,animal
+dog,animal
+cat,animal
+chair,object
+table,object
+microscope,scientific instrument
+telescope,scientific instrument
+computer,technology
+keyboard,technology
+monitor,technology
+python,programming language
+java,programming language
+javascript,programming language
+ruby,programming language
+guitar,musical instrument
+violin,musical instrument
+flute,musical instrument
+drum,musical instrument
+trumpet,musical instrument
+xylophone,musical instrument
+canada,country
+brazil,country
+germany,country
+japan,country
+india,country
+australia,country
+laptop,object
+mouse,object
+notebook,object
+pencil,object
+refrigerator,appliance
+microwave,appliance
+oven,appliance
+blender,appliance
+car,vehicle
+bicycle,vehicle
+motorcycle,vehicle
+airplane,vehicle
+rocket,vehicle
+go,programming language
+swift,programming language
+pen,object
+book,object
+cloud,nature
+mountain,nature
+waterfall,nature
