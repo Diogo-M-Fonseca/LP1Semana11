@@ -21,22 +21,17 @@ namespace PlayerManagerMVC2
             // Initialize player comparers
             IComparer<Player> compareByName = new CompareByName(true);
             IComparer<Player> compareByNameReverse = new CompareByName(false);
+            if (args.Length == 0)
+            {
+                Console.Error.WriteLine("Erro: Nome do ficheiro com jogadores não fornecido.");
+                Console.Error.WriteLine("Uso: PlayerManagerMVC <ficheiro>");
+                return;
+            }
 
-            // Initialize the player list with two players using collection
-            // initialization syntax
-            PlayersList playerList = new PlayersList() {
-                new Player("Marco", 100),
-                new Player("Polo", 500)
-            };
+            string filePath = args[0];
 
-            Controller controller = new Controller(
-                playerList, compareByName, compareByNameReverse
-            );
-
-
-            IView view = new UglyView();
-
-            controller.Run(view);
+            var controller = new Controller(filePath);
+            controller.Run();
 
         }
     }

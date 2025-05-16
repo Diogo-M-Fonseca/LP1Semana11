@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using PlayerManagerMVC;
+using PlayerManagerMVC2;
 
 
-namespace PlayerManagerMVC
+namespace PlayerManagerMVC2
 {
 
     public class UglyView : IView

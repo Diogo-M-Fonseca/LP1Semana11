@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using PlayerManagerMVC2;
@@ -26,18 +27,46 @@ namespace PlayerManagerMVC2
 
 
 
-        public Controller(
-            PlayersList playerList,
-            IComparer<Player> compareByName,
-            IComparer<Player> compareByNameReverse)
+        public Controller(string filePath)
         {
+            view = new UglyView();
+            compareByName = new CompareByName(true);
+            compareByNameReverse = new CompareByName(false);
 
+            playerList = new List<Player>();
 
-            this.playerList = playerList;
-            this.compareByName = compareByName;
-            this.compareByNameReverse = compareByNameReverse;
-
+            try
+            {
+                LoadPlayersFromFile(filePath);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Erro ao ler o ficheiro: {ex.Message}");
+                Environment.Exit(1);
+            }
         }
+        }
+
+         private void LoadPlayersFromFile(string filePath)
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Ficheiro não encontrado.", filePath);
+
+            var lines = File.ReadAllLines(filePath);
+            foreach (var line in lines)
+            {
+                var parts = line.Split(',');
+                if (parts.Length != 2)
+                    continue;
+
+                string name = parts[0].Trim();
+                if (!int.TryParse(parts[1], out int score))
+                    continue;
+
+                playerList.Add(new Player(name, score));
+            }
+        }
+
 
         
 
